@@ -1,0 +1,20 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+.DS_Store
+projects/
+
+# user data: every asset is personal (faces, likenesses, your own prompts and results) — only the READMEs ship
+assets/*
+!assets/README.md
+!assets/characters/
+assets/characters/*
+!assets/characters/README.md
+!assets/props/
+assets/props/*
+!assets/props/README.md
+work/
+scripts/out/
+.claude/skills/*-workspace/

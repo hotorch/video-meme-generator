@@ -1,0 +1,12 @@
+# Same text files on every OS (Windows checkouts get CRLF in the working tree, LF in the repo)
+* text=auto
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+
+*.mp4 binary
+*.gif binary
+*.jpg binary
+*.png binary

@@ -1,0 +1,98 @@
+{
+  "skill_name": "genjutsu-prompt",
+  "evals": [
+    {
+      "id": 1,
+      "name": "motion-transfer-dance-rooftop",
+      "prompt": "12초짜리 틱톡 댄스 챌린지 영상이 레퍼런스야. 한 명이 흰 스튜디오에서 고정 카메라로 춤추고 컷은 없어. 이걸 motion-transfer로 내 캐릭터가 추게 하고 싶고, 배경은 밤의 네온 조명 옥상으로 바꾸고 싶어. 보낼 이미지는 2장이야: image 1 = 내 캐릭터(me) 룩 — 오버사이즈 회색 후드, 카키 카고팬츠, 흰 운동화, 서서 댄스 준비 자세, 무지 회색 배경 / image 2 = 내 캐릭터 클로즈업 얼굴. 젠주츠 프롬프트 최종본 써줘.",
+      "expected_output": "A motion-transfer prompt using <<<video_1>>> and <<<image_1>>> <<<image_2>>> with roles, that defines the new rooftop setting, keeps timing/camera from the video, and has quality/negative constraints.",
+      "files": [],
+      "assertions": [
+        "Prompt passes `memegen prompt check` lint (valid tokens, every image referenced, video token)",
+        "No real people's names in the prompt",
+        "Negatives include watermark, identity drift and extra people",
+        "Defines the new neon rooftop setting",
+        "Timing/rhythm tied to <<<video_1>>>",
+        "Prompt length <= 1,500 chars (T1 + a setting sentence)"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "object-swap-meeting-mixed-roles",
+      "prompt": "회의실 밈 영상(9초, 하드컷 2개, 고정 삼각대 카메라). 사람 교체 계획: (A, 메인) 왼쪽에 서서 발표하는 검은 가죽재킷 남자 → 젠슨 황, 룩 없이 직접 입력이라 얼굴·머리만 바꾸고 가죽재킷은 그대로; (B) 가운데 앉은 파란 셔츠 남자 → 내 캐릭터 Me, 룩 승인됨; (C) 오른쪽 책상 위에 앉은 비글 강아지 → 우리 고양이 복자, 직접 입력. 뒤쪽 화이트보드와 다른 참석자 2명은 그대로 둬야 해. 이미지 순서: image 1 = 젠슨 황 정면 클로즈업 사진, image 2 = 젠슨 황 3/4 상반신 사진, image 3 = Me 룩(파란 셔츠 대신 흰 셔츠+넥타이, 의자에 앉은 자세), image 4 = Me 클로즈업, image 5 = 복자 정면 전신. 젠주츠 프롬프트 최종본 써줘.",
+      "expected_output": "An object-swap prompt with all 5 tokens bound to the right people, head-only swap for the real person keeping the leather jacket, no real names, protected whiteboard/attendees, negatives.",
+      "files": [],
+      "assertions": [
+        "Prompt passes `memegen prompt check` lint (valid tokens, every image referenced, video token)",
+        "No real people's names in the prompt",
+        "Negatives include watermark, identity drift and extra people",
+        "Real person is head-only and keeps the leather jacket",
+        "Cat bound to <<<image_5>>> replacing the dog",
+        "Whiteboard and the two other attendees protected",
+        "Prompt length <= 2,500 chars (T2)",
+        "States that the three swapped roles' references never cross (cross-exclusion)"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "retake-fix-after-bad-take",
+      "prompt": "car-hiphop 테이크 1이 망했어. Gate 3 결과: (1) 운전자 얼굴이 하드컷 이후 원래 사람으로 돌아옴, (2) 뒷좌석 빨간 모자 남자 얼굴이 앞좌석 래퍼 얼굴이랑 섞임, (3) 오른쪽 아래에 워터마크 같은 글자가 생김. 영상: SUV 대시보드 카메라, 12.8초, 하드컷 8개, 앞좌석 래퍼(메인, 카메라 가장 가까움), 뒷좌석 왼쪽 빨간 모자, 뒷좌석 오른쪽 줄무늬 스웨터, 오른쪽 운전자. 이미지: image1 나 룩(검은 그래픽티+체인+투명 원형안경), image2 나 클로즈업, image3 빨간모자 룩(빨간 캡+흰티), image4 그 사람 클로즈업, image5 줄무늬 스웨터 룩, image6 그 사람 클로즈업, image7 운전자 룩(네이비티+검은 봄버+금체인), image8 그 사람 클로즈업. 테이크1 프롬프트는 이거였어:\n\nReference images:\n- Image 1: Me, dressed for this scene\n- Image 2: Me close-up\n- Image 3: Sam Altman dressed\n- Image 4: Sam Altman close-up\n- Image 5: Dario Amodei dressed\n- Image 6: Dario Amodei close-up\n- Image 7: Elon Musk dressed\n- Image 8: Elon Musk close-up\nReplace the man in the front passenger seat with the person from image 1 and image 2. Replace the man in a red baseball cap with the person from image 3 and image 4. Replace the man in a striped sweater with the person from image 5 and image 6. Replace the driver with the person from image 7 and image 8. Keep everything else exactly as in the source video.\n\n테이크 2용 프롬프트 고쳐서 최종본 써줘. 뭘 왜 바꿨는지도 짧게.",
+      "expected_output": "A revised prompt with <<<...>>> tokens, stronger per-seat binding cues, identity-across-cuts clause, watermark/text negatives, no real names, plus a short change log.",
+      "files": [],
+      "assertions": [
+        "Prompt passes `memegen prompt check` lint (valid tokens, every image referenced, video token)",
+        "No real people's names in the prompt",
+        "Negatives include watermark, identity drift and extra people",
+        "Identity held across hard cuts is stated",
+        "Red-cap man bound by seat position",
+        "Change log explains fixes (notes.md)",
+        "Prompt length <= 2,500 chars (T2)"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "t1-middle-dancer-simple",
+      "prompt": "8초짜리 댄스 영상이야. 컷 없음, 고정 카메라, 깨끗한 원본(워터마크 없음). 다섯 명이 추는데 가운데 메인 댄서(흰 후드)만 나(me)로 바꾸고 나머지는 다 그대로. 룩 결정은 direct라 옷도 원본 흰 후드 그대로 가도 돼. 보낼 이미지: image 1 = 내 정면 셀카, image 2 = 내 3/4 셀카. object-swap으로 젠주츠 프롬프트 최종본 써줘.",
+      "expected_output": "A short T1 prompt (1–3 sentences + negatives) binding the middle dancer in the white hoodie to both images, keeping everything else from the video.",
+      "files": [],
+      "assertions": [
+        "Prompt passes `memegen prompt check` lint (valid tokens, every image referenced, video token)",
+        "No real people's names in the prompt",
+        "Prompt length <= 500 chars",
+        "Binds the middle / white-hoodie dancer",
+        "Does not describe the user's face features in words",
+        "Keeps the other four dancers / everything else from <<<video_1>>>"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "t3-instagram-capture",
+      "prompt": "인스타 릴스를 화면녹화한 10초 영상이 레퍼런스야. 위에 사용자 아이디, 오른쪽에 좋아요/댓글 버튼, 아래에 캡션 텍스트랑 진행바가 계속 떠 있어. 한 남자가 카페에서 커피 들고 카메라 보며 말하는 셀카 영상, 얼굴은 화면의 1/6 정도로 작고 원본 남자는 얼굴이 넓고 턱수염이 있어. 이 사람을 나(Me, 얼굴 갸름하고 수염 없음)로 바꾸고 싶어. 이미지: image 1 = 내 정면 셀카, image 2 = 내 3/4 셀카, image 3 = 내 룩(카페 셀카용, 베이지 니트). 젠주츠 프롬프트 최종본 써줘.",
+      "expected_output": "A T1+T3 prompt: identity lock block (preserve face shape, no beard, don't widen), clean-frame block removing the named app UI, bindings for all 3 images.",
+      "files": [],
+      "assertions": [
+        "Prompt passes `memegen prompt check` lint (valid tokens, every image referenced, video token)",
+        "No real people's names in the prompt",
+        "Names the capture debris to remove (username, like/comment buttons, caption, progress bar)",
+        "Has an identity-preservation block that forbids redesign/beautify/widening",
+        "Addresses the beard conflict (no beard / clean-shaven)",
+        "Prompt length <= 3,500 chars"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "t4-restage-lantern-night",
+      "prompt": "15초 K-pop 7인 그룹 안무 영상(흰 연습실, 고정 정면 카메라, 컷 없음, 9:16)의 안무랑 카메라만 가져오고 세계는 완전히 바꾸고 싶어. motion-transfer로: 한강 둔치 밤, 거대한 한지 등불들이 떠 있는 곳. 센터(메인)는 나(me), 검은 한복 재해석 롱코트. 나머지 6명은 머리 대신 커다란 한지 등불 하나씩(얼굴 없음), 짙은 남색 모던 한복. 시작 2초는 모두 정지, 내가 등불 하나를 들어 올리는 순간 안무 시작. 이미지: image 1 = 내 정면 셀카, image 2 = 내 3/4 셀카, image 3 = 등불 무드 레퍼런스 사진. 젠주츠 프롬프트 최종본 써줘.",
+      "expected_output": "A T4 brief with reference roles, format, world, subject identity + styling, beats in order (still → lift lantern → choreography), camera from video, hierarchy, the lantern-head invariant repeated, negatives.",
+      "files": [],
+      "assertions": [
+        "Prompt passes `memegen prompt check` lint (valid tokens, every image referenced, video token)",
+        "No real people's names in the prompt",
+        "States <<<video_1>>> is authority for choreography/camera only (not the white studio)",
+        "Beats in order: 2 s stillness → lantern lifted → choreography starts",
+        "One-lantern-per-head / no faces invariant stated and repeated",
+        "Prompt length between 1,500 and 10,000 chars"
+      ]
+    }
+  ]
+}

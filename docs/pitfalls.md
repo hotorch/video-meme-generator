@@ -24,3 +24,4 @@
 - **npm 으로 깐 Codex 는 Windows 에서 `codex.cmd`** → 실행 전 `shutil.which()` 로 실제 경로를 찾는다. yt-dlp 는 `python -m yt_dlp` 로(PATH 에 기대지 않음).
 - **스킬을 심볼릭 링크로 두었더니 Windows git 이 텍스트 파일로 받았다** → `.claude/skills/` 에 실제 폴더로 둔다.
 - **`curl`, `mv ~/.Trash`, `/tmp` 를 스킬에 적어 두면 Windows 에서 막힌다** → 같은 일을 하는 `memegen` 명령(upload-put, trash, frame)을 쓴다.
+- **Windows 에서 `str(Path)` 로 저장한 상대 경로가 `views\hero.png` 가 됐다** → JSON 에 넣는 경로는 항상 `.as_posix()`. 시험 코드도 파일을 `encoding="utf-8"` 로 읽는다(Windows CI 가 잡음).

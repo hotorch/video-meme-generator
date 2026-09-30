@@ -18,6 +18,8 @@ Claude Code 안에서 `이 영상에 나 넣어줘 <영상 주소>` 한 줄이�
 - **원본 길이 그대로.** 영상을 자르지 않습니다(최대 30초). 끝이 잘리지 않게 정수 초로 맞춰 보내고, 마지막에 원래 길이로 되돌립니다.
 - **실제로 부딪힌 함정을 알고 있습니다.** 80번 넘게 돌려 보며 알아낸 것(어느 모드가 얼굴형을 바꾸는지, 얼굴 차이가 클 때 프롬프트를 어떻게 쓰는지, 검열에 걸리는 말)이 스킬과 [docs/pitfalls.md](docs/pitfalls.md), [docs/findings.md](docs/findings.md) 에 들어 있습니다.
 
+> 📖 **처음이라면 [사용 매뉴얼](docs/MANUAL.md)** 부터 보세요. 스킬 소개와 원리, 온보딩, Codex 이미지 생성 가이드가 한 문서에 있습니다(노션에 그대로 가져올 수 있는 마크다운).
+
 > 📚 **교육용으로 만든 프로젝트입니다.** Claude Code에 스킬·검사·작업 폴더를 붙여, 돈이 드는 AI 영상 생성을 끝까지 맡기는 방법을 보여 주려고 만들었습니다. 뜯어보고 고쳐 쓰면서 배우라고 공개합니다. 만든 과정은 유튜브 [@ai.sam_hottman](https://www.youtube.com/@ai.sam_hottman) 에서 소개합니다.
 
 ---
@@ -34,9 +36,9 @@ Claude Code 안에서 `이 영상에 나 넣어줘 <영상 주소>` 한 줄이�
 | [uv](https://docs.astral.sh/uv/) (파이썬 관리, 파이썬도 알아서 받음) | `winget install astral-sh.uv` | `brew install uv` | `uv --version` |
 | [ffmpeg](https://ffmpeg.org) | `winget install Gyan.FFmpeg` | `brew install ffmpeg` | `ffmpeg -version` |
 | [Higgsfield](https://higgsfield.ai) 계정 | 영상 생성에 필요. 아래 [API 연결](#2-api-연결-둘-중-하나) 참고 | | |
-| (선택) [Codex CLI](https://github.com/openai/codex) | `npm i -g @openai/codex` 후 `codex login` | 같음 | `codex login status` |
+| **[Codex CLI](https://github.com/openai/codex) (이미지 생성, 추천)** | `winget install OpenJS.NodeJS.LTS` → `npm i -g @openai/codex` → `codex login` | `brew install node` → 같음 | `codex login status` |
 
-Linux는 `curl -LsSf https://astral.sh/uv/install.sh | sh`, `sudo apt install ffmpeg` 입니다. Codex는 인물에게 영상 속 옷을 입힐 때만 쓰고, 없어도 기본 흐름은 돌아갑니다(ChatGPT 로그인, Node.js 필요).
+Linux는 `curl -LsSf https://astral.sh/uv/install.sh | sh`, `sudo apt install ffmpeg` 입니다. 이미지 생성은 **Codex CLI를 추천**합니다(아래 [이미지 생성](#이미지-생성은-codex-cli-추천)). ChatGPT 계정으로 로그인하면 API 키 없이 쓸 수 있습니다.
 
 > **Windows**: `winget` 으로 설치한 뒤에는 **터미널을 새로 열어야** `uv`, `ffmpeg` 가 잡힙니다.
 
@@ -136,6 +138,27 @@ chair-jump (12초) 생성 방식을 골라 주세요
 > **매번 묻는 것도 싫다면** `.env` 에 `MEMEGEN_RUN_PLAN=probe-first` (또는 `full`) 를 넣으세요. 그 뒤로는 묻지 않습니다.
 
 ---
+
+## 이미지 생성은 Codex CLI (추천)
+
+영상 생성은 Higgsfield Genjutsu가 하지만, 그 앞에 필요한 **이미지**는 [Codex CLI](https://github.com/openai/codex)로 만듭니다.
+내 사진을 레퍼런스로 붙여 그리기 때문에 얼굴·머리·액세서리가 잘 유지되고, ChatGPT 요금제 안에서 돌아가 추가 비용이 없습니다.
+Higgsfield 이미지 모델과 Soul은 신원이 자주 바뀌어서 쓰지 않습니다.
+
+| 쓰는 곳 | 예 |
+|---|---|
+| 룩 | 옷·소품이 곧 웃음 포인트일 때, 내 캐릭터에게 영상 속 옷을 입힌 사진 |
+| 캐릭터 수정·새 각도 | "키가 작게 그려졌어", "옆모습이 없어" |
+| 사물 | "트럭을 검정 SUV로" 처럼 이미지가 없는 사물 |
+
+```bash
+npm i -g @openai/codex
+codex login
+uv run memegen doctor
+```
+
+`doctor` 의 `codex (looks / image gen)` 가 `true` 면 준비 끝입니다. 그다음은 Claude에게 "옷을 영상처럼 입혀줘" 처럼 말하면 됩니다.
+Codex 없이도 내 사진을 그대로 넣는 기본 흐름은 돌아갑니다. 명령·요령·문제 해결은 [매뉴얼 6장](docs/MANUAL.md#6-이미지-생성-codex-cli-가이드-추천)에 있습니다.
 
 ## 비용
 
@@ -242,6 +265,7 @@ docs/references/       정책·절차 문서
 memegen/               CLI 코드
 assets/characters/     내 캐릭터 (git에 올라가지 않음)
 assets/props/          사물 이미지 (git에 올라가지 않음)
+docs/MANUAL.md         사용 매뉴얼 (노션용 마크다운)
 docs/pitfalls.md       실제로 겪은 함정 모음
 docs/findings.md       실험 기록 (무엇이 되고 무엇이 안 됐나)
 work/                  작업 폴더, 밈 하나당 하나 (git에 올라가지 않음)

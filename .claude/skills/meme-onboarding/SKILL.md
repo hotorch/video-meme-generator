@@ -17,7 +17,10 @@ inputs. Say so once when asking for photos. Speak Korean, plainly; the user may 
 
 ## Course (5 steps, show progress as "1/5 …")
 **1/5 설치 확인** — `memegen doctor`. Fix every `false` among ffmpeg/ffprobe with the `hints` for its `os`
-(Windows: `winget …`, then a new terminal). Codex is optional (only for dressing characters); mention it once.
+(Windows: `winget …`, then a new terminal). Image generation is recommended through the **Codex CLI**
+(`npm i -g @openai/codex` → `codex login` with their ChatGPT account, no API key): it keeps identity far better
+than other image models and is needed for looks, fixing a character and props. Offer to set it up now; if they
+skip it, the basic flow (their photos straight in) still works. Guide: `docs/MANUAL.md` §6.
 
 **2/5 영상 생성 연결** — `doctor.generation` tells which backend is ready. Neither ready → explain the two options
 from README "API 연결" in three lines (MCP connector = subscription credits, recommended; REST key = pay as you

@@ -755,7 +755,7 @@ def image_gen(unit: Optional[str] = typer.Argument(None, metavar="[UNIT]"),
         fail("codex generated nothing", errors=errors)
     if project:
         project.update(generated=project.load().get("generated", []) + [
-            {**r.to_dict(), "file": str(r.file.relative_to(project.root))} for r in results])
+            {**r.to_dict(), "file": r.file.relative_to(project.root).as_posix()} for r in results])
     else:
         for r in results:
             assets.record_source(char, r.file, note=f"codex image_gen: {prompt[:200]}")
@@ -844,7 +844,7 @@ def look_gen(unit: str = typer.Argument(..., metavar="UNIT"),
     with ThreadPoolExecutor(max_workers=len(todo)) as pool:
         for a, (results, errors, sheet) in zip(todo, pool.map(lambda a: look.generate(project, a, n), todo)):
             out[a.cast_id] = {"character": a.character, "review_sheet": str(sheet), "errors": errors,
-                              "looks": [str(r.file.relative_to(project.root)) for r in results]}
+                              "looks": [r.file.relative_to(project.root).as_posix() for r in results]}
     project.mark("assets", looks={k: v["looks"] for k, v in out.items()})
     emit({"ok": all(v["looks"] for v in out.values()), "looks": out, "missing_look": missing, "direct_input": direct,
           "next": "Gate L: open each review sheet, score identity/outfit/pose/clean (0-10, all >= 7 to pass), then "

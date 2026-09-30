@@ -103,7 +103,7 @@ def add_source(slug: str, file: Path, url: str | None = None, page: str | None =
     char = load(slug)
     dest = _unique(char_dir(slug) / "source" / Path(file).name)
     shutil.copy2(file, dest)
-    char.provenance.append(Provenance(file=str(dest.relative_to(char_dir(slug))), url=url, page=page,
+    char.provenance.append(Provenance(file=dest.relative_to(char_dir(slug)).as_posix(), url=url, page=page,
                                       license=license_, note=note))
     save(char)
     return dest
@@ -112,7 +112,7 @@ def add_source(slug: str, file: Path, url: str | None = None, page: str | None =
 def record_source(slug: str, file: Path, note: str = "") -> None:
     """Record provenance for a file already inside the character dir (e.g. a codex-generated sheet)."""
     char = load(slug)
-    char.provenance.append(Provenance(file=str(file.resolve().relative_to(char_dir(slug).resolve())), note=note))
+    char.provenance.append(Provenance(file=file.resolve().relative_to(char_dir(slug).resolve()).as_posix(), note=note))
     save(char)
 
 
@@ -170,7 +170,7 @@ def fetch(slug: str, url: str, page: str | None = None, license_: str | None = N
             img.convert("RGB").save(png)
             dest.unlink()
             dest = png
-    char.provenance.append(Provenance(file=str(dest.relative_to(char_dir(slug))), url=url, page=page,
+    char.provenance.append(Provenance(file=dest.relative_to(char_dir(slug)).as_posix(), url=url, page=page,
                                       license=license_))
     save(char)
     return dest
@@ -197,7 +197,7 @@ def crop(slug: str, source: Path, box: tuple[int, int, int, int] | None, name: s
     dest.parent.mkdir(parents=True, exist_ok=True)
     region.save(dest)
     char = load(slug)
-    rel = str(dest.relative_to(char_dir(slug)))
+    rel = dest.relative_to(char_dir(slug)).as_posix()
     char.views = [v for v in char.views if v.file != rel]
     char.views.append(View(file=rel, shot=shot, angle=angle, expression=expression, description=description,
                            origin=origin))
@@ -322,7 +322,7 @@ def resolve_plan(plan, analysis, base: Path | None = None) -> tuple[object, dict
         if not a.images and a.look_review and a.look_review.passed:
             # approved look first (pose/outfit/framing of the target), then the sharpest face view
             face_path, face = pick(a.character, "close-up", "front", 1)[0]
-            a.images = [a.look_review.chosen, str(face_path.relative_to(char_dir(a.character)))]
+            a.images = [a.look_review.chosen, face_path.relative_to(char_dir(a.character)).as_posix()]
             a.image_notes = []
         if not a.images:
             member = cast[a.cast_id]

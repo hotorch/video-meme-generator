@@ -131,11 +131,11 @@ def test_project_manifest(tmp_path):
     project = Project.create(tmp_path, "Jensen x Me!", "brief")
     assert project.root.name.endswith("jensen-x-me") and project.slug == "jensen-x-me"
     assert all((project.root / sub).is_dir() for sub in SCAFFOLD)
-    assert "- [ ] ingest" in (project.root / "README.md").read_text()
+    assert "- [ ] ingest" in (project.root / "README.md").read_text(encoding="utf-8")
     assert project.next_stage() == "ingest"
     project.mark("ingest")
     assert project.next_stage() == "analyze"
-    assert "- [x] ingest" in (project.root / "README.md").read_text()
+    assert "- [x] ingest" in (project.root / "README.md").read_text(encoding="utf-8")
     assert Project.open("jensen-x-me", tmp_path).root == project.root.resolve()
     second = Project.create(tmp_path, "Jensen x Me!")  # same minute -> distinct unit, same scaffold
     assert second.root != project.root and second.root.name.endswith("jensen-x-me-2")
@@ -188,9 +188,9 @@ def test_codex_generate_falls_back_to_codex_store(tmp_path, monkeypatch):
     first = codex.generate("in a suit", [codex.Ref(ref, "Alex, close-up")], out, "me_suit", logs_dir=tmp_path / "logs")
     assert first.file == out / "me_suit.png" and first.file.exists() and first.thread_id == "t-123"
     assert codex.load_sidecar(first.file)["refs"][0]["note"] == "Alex, close-up"
-    argv = (tmp_path / "argv.txt").read_text()
+    argv = (tmp_path / "argv.txt").read_text(encoding="utf-8")
     assert argv.startswith(f"exec -i {ref}") and argv.rstrip().endswith("-")
-    stdin = (tmp_path / "stdin.txt").read_text()
+    stdin = (tmp_path / "stdin.txt").read_text(encoding="utf-8")
     assert "- Image 1: Alex, close-up" in stdin and "in a suit" in stdin and "./me_suit.png" in stdin
     second = codex.generate("in a suit", [], out, "me_suit")  # never overwrites
     assert second.name == "me_suit_v2"
